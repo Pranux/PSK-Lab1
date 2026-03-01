@@ -8,4 +8,16 @@
   <interceptors>
     <class>org.project.lab.interceptor.LoggingInterceptor</class>
   </interceptors>
+
+  <!-- alternative (Strategy pattern):
+  <alternatives>
+    <class>org.project.lab.alternative.AdvancedUniversityService</class>
+  </alternatives>
+  -->
+
+  <!-- decorator activation
+  <decorators>
+    <class>org.project.lab.decorator.UniversityServiceDecorator</class>
+  </decorators>
+  -->
 </beans>
