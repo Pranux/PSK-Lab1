@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.lab.dao.StudentMapperInterface">
+
+  <resultMap id="studentMap" type="Student">
+    <id property="id" column="id"/>
+    <result property="firstName" column="first_name"/>
+    <result property="lastName" column="last_name"/>
+    <result property="email" column="email"/>
+    <result property="optLockVersion" column="opt_lock_version"/>
+    <collection property="courses" ofType="Course">
+      <id property="id" column="c_id"/>
+      <result property="title" column="c_title"/>
+      <result property="credits" column="c_credits"/>
+    </collection>
+  </resultMap>
+
+  <select id="findById" parameterType="long" resultMap="studentMap">
+    SELECT s.id, s.first_name, s.last_name, s.email, s.opt_lock_version,
+           c.id as c_id, c.title as c_title, c.credits as c_credits
+    FROM student s
+           LEFT JOIN student_course sc ON sc.student_id = s.id
+           LEFT JOIN course c ON c.id = sc.course_id
+    WHERE s.id = #{id}
+  </select>
+
+  <select id="findAll" resultType="Student">
+    SELECT id, first_name as firstName, last_name as lastName,
+           email, opt_lock_version as optLockVersion
+    FROM student
+  </select>
+
+  <insert id="insert" parameterType="Student" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO student (first_name, last_name, email)
+    VALUES (#{firstName}, #{lastName}, #{email})
+  </insert>
+
+  <insert id="enrollInCourse">
+    INSERT INTO student_course (student_id, course_id) VALUES (#{studentId}, #{courseId})
+  </insert>
+
+</mapper>

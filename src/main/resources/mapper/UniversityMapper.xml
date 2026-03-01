@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.project.lab.dao.UniversityMapperInterface">
+  
+  <resultMap id="universityMap" type="University">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="city" column="city"/>
+    <result property="optLockVersion" column="opt_lock_version"/>
+    <collection property="courses" ofType="Course">
+      <id property="id" column="c_id"/>
+      <result property="title" column="c_title"/>
+      <result property="credits" column="c_credits"/>
+    </collection>
+  </resultMap>
+
+  <select id="findById" parameterType="long" resultMap="universityMap">
+    SELECT u.id, u.name, u.city, u.opt_lock_version,
+           c.id as c_id, c.title as c_title, c.credits as c_credits
+    FROM university u
+           LEFT JOIN course c ON c.university_id = u.id
+    WHERE u.id = #{id}
+  </select>
+
+  <select id="findAll" resultType="University">
+    SELECT id, name, city, opt_lock_version as optLockVersion FROM university
+  </select>
+
+  <insert id="insert" parameterType="University" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO university (name, city) VALUES (#{name}, #{city})
+  </insert>
+
+  <update id="update" parameterType="University">
+    UPDATE university SET name = #{name}, city = #{city},
+                          opt_lock_version = opt_lock_version + 1
+    WHERE id = #{id} AND opt_lock_version = #{optLockVersion}
+  </update>
+
+</mapper>
