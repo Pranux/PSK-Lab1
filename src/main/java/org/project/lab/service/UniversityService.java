@@ -1,6 +1,5 @@
 package org.project.lab.service;
 
-import org.project.lab.dao.UniversityDAO;
 import org.project.lab.dao.UniversityDAOJPA;
 import org.project.lab.entity.University;
 import org.project.lab.interceptor.Logged;
