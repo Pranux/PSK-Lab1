@@ -1,12 +1,15 @@
 package org.project.lab.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "student")
-public class Student {
+public class Student implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,10 @@ public class Student {
   @Column(name = "opt_lock_version")
   private int optLockVersion;
   
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "university_id")
+  private University university;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "student_course",
@@ -49,6 +56,9 @@ public class Student {
 
   public int getOptLockVersion() { return optLockVersion; }
   public void setOptLockVersion(int optLockVersion) { this.optLockVersion = optLockVersion; }
+
+  public University getUniversity() { return university; }
+  public void setUniversity(University university) { this.university = university; }
 
   public List<Course> getCourses() { return courses; }
   public void setCourses(List<Course> courses) { this.courses = courses; }
