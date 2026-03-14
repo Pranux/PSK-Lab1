@@ -24,6 +24,14 @@ public class CourseDAOJPA implements CourseDAO {
     return em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
   }
 
+  public List<Course> findByUniversity(Long universityId) {
+    return em.createQuery(
+        "SELECT c FROM Course c WHERE c.university.id = :uid",
+        Course.class)
+        .setParameter("uid", universityId)
+        .getResultList();
+  }
+
   @Override
   @Transactional
   public void persist(Course course) {

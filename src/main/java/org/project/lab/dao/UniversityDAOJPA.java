@@ -20,8 +20,18 @@ public class UniversityDAOJPA implements UniversityDAO {
   }
 
   @Override
+  @Transactional
   public List<University> findAll() {
-    return em.createQuery("SELECT u FROM University u", University.class).getResultList();
+    List<University> universities = em.createQuery(
+        "SELECT DISTINCT u FROM University u LEFT JOIN FETCH u.courses",
+        University.class
+    ).getResultList();
+    for (University u : universities) {
+      for (org.project.lab.entity.Course c : u.getCourses()) {
+        c.getStudents().size();
+      }
+    }
+    return universities;
   }
 
   @Override
