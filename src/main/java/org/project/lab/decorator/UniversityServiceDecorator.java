@@ -1,7 +1,7 @@
 package org.project.lab.decorator;
 
 import org.project.lab.entity.University;
-import org.project.lab.service.UniversityService;
+import org.project.lab.service.UniversityServiceLocal;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Decorator
-public abstract class UniversityServiceDecorator extends UniversityService {
+public abstract class UniversityServiceDecorator implements UniversityServiceLocal {
 
   private static final Logger LOGGER = Logger.getLogger(UniversityServiceDecorator.class.getName());
 
   @Inject
   @Delegate
   @Any
-  private UniversityService delegate;
+  private UniversityServiceLocal delegate;
 
   @Override
   public List<University> getAllUniversities() {
