@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequestScoped
 @Logged
-public class UniversityService {
+public class UniversityService implements UniversityServiceLocal {
 
   @Inject
   private UniversityDAOJPA universityDAO;
