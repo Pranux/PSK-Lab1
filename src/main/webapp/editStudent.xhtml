@@ -3,18 +3,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:metadata>
+  <f:viewParam name="id" value="#{universityController.formStudentId}"/>
+  <f:event type="preRenderView" listener="#{universityController.initForm}"/>
+</f:metadata>
 <h:head>
-  <title>Add Student</title>
+  <title>Edit Student</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css"/>
 </h:head>
 <h:body>
-  <h1>Add New Student</h1>
+  <h1>Edit Student</h1>
 
   <h:panelGroup rendered="#{not empty universityController.errorMessage}">
     <p style="color:red;">#{universityController.errorMessage}</p>
+    <h:form rendered="#{universityController.hasConflict}">
+      <h:commandButton value="Overwrite anyway"
+                       action="#{universityController.overwriteStudent}"/>
+      &#160;
+      <h:commandButton value="Refresh and retry"
+                       action="#{universityController.refreshAndRetry}"
+                       immediate="true"/>
+    </h:form>
   </h:panelGroup>
 
   <h:form>
+    <h:inputHidden value="#{universityController.formStudent.id}"/>
+    <h:inputHidden value="#{universityController.formStudent.optLockVersion}"/>
+
     <table>
       <tr>
         <td>First Name:</td>
@@ -32,7 +47,7 @@
         <td>University:</td>
         <td>
           <h:selectOneMenu value="#{universityController.selectedUniversityId}">
-            <f:selectItem itemLabel="-- Select University --" itemValue=""/>
+            <f:selectItem itemLabel="-- None --" itemValue=""/>
             <f:selectItems value="#{universityController.universities}" var="u"
                            itemLabel="#{u.name}" itemValue="#{u.id}"/>
             <f:ajax event="change" render="courseSelect" execute="@this"/>
@@ -52,7 +67,7 @@
       </tr>
     </table>
     <br/>
-    <h:commandButton value="Add Student" action="#{universityController.addStudent}"/>
+    <h:commandButton value="Save Changes" action="#{universityController.saveStudent}"/>
   </h:form>
 
   <br/>
