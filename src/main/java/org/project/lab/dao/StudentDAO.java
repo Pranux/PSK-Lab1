@@ -8,4 +8,7 @@ public interface StudentDAO {
   List<Student> findAll();
   void persist(Student student);
   Student merge(Student student);
+  Student findWithDetails(Long id);
+  boolean existsByName(String firstName, String lastName);
+  void delete(Long id);
 }

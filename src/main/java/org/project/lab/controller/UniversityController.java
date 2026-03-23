@@ -5,8 +5,10 @@ import org.project.lab.entity.Student;
 import org.project.lab.entity.University;
 import org.project.lab.service.AsyncService;
 import org.project.lab.service.UniversityServiceLocal;
-import org.project.lab.dao.StudentDAOJPA;
-import org.project.lab.dao.CourseDAOJPA;
+//import org.project.lab.dao.StudentDAOJPA;
+//import org.project.lab.dao.CourseDAOJPA;
+import org.project.lab.dao.StudentDAO;
+import org.project.lab.dao.CourseDAO;
 
 import java.util.concurrent.Future;
 
@@ -32,10 +34,12 @@ public class UniversityController implements Serializable {
   private UniversityServiceLocal universityService;
 
   @Inject
-  private StudentDAOJPA studentDAO;
+//  private StudentDAOJPA studentDAO;
+  private StudentDAO studentDAO;
 
   @Inject
-  private CourseDAOJPA courseDAO;
+//  private CourseDAOJPA courseDAO;
+  private CourseDAO courseDAO;
 
   @Inject
   private AsyncService asyncService;
@@ -132,11 +136,11 @@ public class UniversityController implements Serializable {
   @Transactional
   public String addStudent() {
     try {
+
       if (studentDAO.existsByName(formStudent.getFirstName(), formStudent.getLastName())) {
         errorMessage = "A student with this name already exists.";
         return null;
       }
-
       if (selectedUniversityId != null) {
         formStudent.setUniversity(universityService.getUniversity(selectedUniversityId));
       }

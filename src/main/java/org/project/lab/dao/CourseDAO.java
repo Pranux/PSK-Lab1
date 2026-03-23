@@ -8,4 +8,5 @@ public interface CourseDAO {
   List<Course> findAll();
   void persist(Course course);
   Course merge(Course course);
+  List<Course> findByUniversity(Long universityId);
 }

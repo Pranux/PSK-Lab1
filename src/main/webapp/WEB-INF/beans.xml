@@ -20,4 +20,12 @@
     <class>org.project.lab.decorator.UniversityServiceDecorator</class>
   </decorators>
   -->
+
+  <!-- uncomment: JPA, commented: MyBatis -->
+  <!--<alternatives>
+    <class>org.project.lab.dao.UniversityDAOJPA</class>
+    <class>org.project.lab.dao.StudentDAOJPA</class>
+    <class>org.project.lab.dao.CourseDAOJPA</class>
+  </alternatives>-->
+  
 </beans>

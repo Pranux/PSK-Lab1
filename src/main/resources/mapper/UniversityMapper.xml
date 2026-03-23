@@ -3,28 +3,52 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.project.lab.dao.UniversityMapperInterface">
 
+  <resultMap id="courseWithStudentsMap" type="Course">
+    <id property="id" column="c_id"/>
+    <result property="title" column="c_title"/>
+    <result property="credits" column="c_credits"/>
+    <collection property="students" ofType="Student">
+      <id property="id" column="cs_id"/>
+    </collection>
+  </resultMap>
+
   <resultMap id="universityMap" type="University">
     <id property="id" column="id"/>
     <result property="name" column="name"/>
     <result property="city" column="city"/>
     <result property="optLockVersion" column="opt_lock_version"/>
-    <collection property="courses" ofType="Course">
-      <id property="id" column="c_id"/>
-      <result property="title" column="c_title"/>
-      <result property="credits" column="c_credits"/>
+    <collection property="students" ofType="Student">
+      <id property="id" column="s_id"/>
+      <result property="firstName" column="s_fn"/>
+      <result property="lastName" column="s_ln"/>
     </collection>
+    <collection property="courses" ofType="Course" resultMap="courseWithStudentsMap"/>
   </resultMap>
 
   <select id="findById" parameterType="long" resultMap="universityMap">
     SELECT u.id, u.name, u.city, u.opt_lock_version,
-           c.id as c_id, c.title as c_title, c.credits as c_credits
+           s.id as s_id, s.first_name as s_fn, s.last_name as s_ln,
+           c.id as c_id, c.title as c_title, c.credits as c_credits,
+           cs.id as cs_id
     FROM university u
+           LEFT JOIN student s ON s.university_id = u.id
            LEFT JOIN course c ON c.university_id = u.id
+           LEFT JOIN student_course sc ON sc.course_id = c.id
+           LEFT JOIN student cs ON cs.id = sc.student_id
     WHERE u.id = #{id}
   </select>
 
-  <select id="findAll" resultType="University">
-    SELECT id, name, city, opt_lock_version as optLockVersion FROM university
+  <select id="findAll" resultMap="universityMap">
+    SELECT u.id, u.name, u.city, u.opt_lock_version,
+           s.id as s_id, s.first_name as s_fn, s.last_name as s_ln,
+           c.id as c_id, c.title as c_title, c.credits as c_credits,
+           cs.id as cs_id
+    FROM university u
+           LEFT JOIN student s ON s.university_id = u.id
+           LEFT JOIN course c ON c.university_id = u.id
+           LEFT JOIN student_course sc ON sc.course_id = c.id
+           LEFT JOIN student cs ON cs.id = sc.student_id
+    ORDER BY u.id
   </select>
 
   <insert id="insert" parameterType="University" useGeneratedKeys="true" keyProperty="id">

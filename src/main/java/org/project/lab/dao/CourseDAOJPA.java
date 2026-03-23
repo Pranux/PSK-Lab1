@@ -3,12 +3,14 @@ package org.project.lab.dao;
 import org.project.lab.entity.Course;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Alternative;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @RequestScoped
+@Alternative
 public class CourseDAOJPA implements CourseDAO {
 
   @PersistenceContext(unitName = "default")

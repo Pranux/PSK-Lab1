@@ -25,10 +25,33 @@
     WHERE s.id = #{id}
   </select>
 
-  <select id="findAll" resultType="Student">
-    SELECT id, first_name as firstName, last_name as lastName,
-           email, opt_lock_version as optLockVersion
-    FROM student
+  <resultMap id="studentListMap" type="Student">
+    <id property="id" column="id"/>
+    <result property="firstName" column="first_name"/>
+    <result property="lastName" column="last_name"/>
+    <result property="email" column="email"/>
+    <result property="optLockVersion" column="opt_lock_version"/>
+    <association property="university" javaType="University">
+      <id property="id" column="u_id"/>
+      <result property="name" column="u_name"/>
+      <result property="city" column="u_city"/>
+    </association>
+    <collection property="courses" ofType="Course">
+      <id property="id" column="c_id"/>
+      <result property="title" column="c_title"/>
+      <result property="credits" column="c_credits"/>
+    </collection>
+  </resultMap>
+
+  <select id="findAll" resultMap="studentListMap">
+    SELECT s.id, s.first_name, s.last_name, s.email, s.opt_lock_version,
+           u.id as u_id, u.name as u_name, u.city as u_city,
+           c.id as c_id, c.title as c_title, c.credits as c_credits
+    FROM student s
+           LEFT JOIN university u ON u.id = s.university_id
+           LEFT JOIN student_course sc ON sc.student_id = s.id
+           LEFT JOIN course c ON c.id = sc.course_id
+    ORDER BY s.id
   </select>
 
   <insert id="insert" parameterType="Student" useGeneratedKeys="true" keyProperty="id">
@@ -39,5 +62,51 @@
   <insert id="enrollInCourse">
     INSERT INTO student_course (student_id, course_id) VALUES (#{studentId}, #{courseId})
   </insert>
+
+  <resultMap id="studentWithDetailsMap" type="Student">
+    <id property="id" column="id"/>
+    <result property="firstName" column="first_name"/>
+    <result property="lastName" column="last_name"/>
+    <result property="email" column="email"/>
+    <result property="optLockVersion" column="opt_lock_version"/>
+    <association property="university" javaType="University">
+      <id property="id" column="u_id"/>
+      <result property="name" column="u_name"/>
+      <result property="city" column="u_city"/>
+    </association>
+    <collection property="courses" ofType="Course">
+      <id property="id" column="c_id"/>
+      <result property="title" column="c_title"/>
+      <result property="credits" column="c_credits"/>
+    </collection>
+  </resultMap>
+
+  <select id="findWithDetails" parameterType="long" resultMap="studentWithDetailsMap">
+    SELECT s.id, s.first_name, s.last_name, s.email, s.opt_lock_version,
+           u.id as u_id, u.name as u_name, u.city as u_city,
+           c.id as c_id, c.title as c_title, c.credits as c_credits
+    FROM student s
+           LEFT JOIN university u ON u.id = s.university_id
+           LEFT JOIN student_course sc ON sc.student_id = s.id
+           LEFT JOIN course c ON c.id = sc.course_id
+    WHERE s.id = #{id}
+  </select>
+
+  <select id="existsByName" resultType="boolean">
+    SELECT COUNT(*) > 0 FROM student
+    WHERE first_name = #{firstName} AND last_name = #{lastName}
+  </select>
+
+  <update id="update" parameterType="Student">
+    UPDATE student SET first_name = #{firstName}, last_name = #{lastName},
+                       email = #{email}, university_id = #{university.id},
+                       opt_lock_version = opt_lock_version + 1
+    WHERE id = #{id} AND opt_lock_version = #{optLockVersion}
+  </update>
+
+  <delete id="delete" parameterType="long">
+    DELETE FROM student_course WHERE student_id = #{id};
+    DELETE FROM student WHERE id = #{id}
+  </delete>
 
 </mapper>

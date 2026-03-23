@@ -35,4 +35,10 @@ public class CourseDAOMyBatis implements CourseDAO {
     sqlSession.update(NAMESPACE + "update", course);
     return course;
   }
+
+  @Override
+  public List<Course> findByUniversity(Long universityId) {
+    return sqlSession.selectList(NAMESPACE + "findByUniversity", universityId);
+  }
+
 }

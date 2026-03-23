@@ -35,4 +35,22 @@ public class StudentDAOMyBatis implements StudentDAO {
     sqlSession.update(NAMESPACE + "update", student);
     return student;
   }
+
+  @Override
+  public Student findWithDetails(Long id) {
+    return sqlSession.selectOne(NAMESPACE + "findWithDetails", id);
+  }
+
+  @Override
+  public boolean existsByName(String firstName, String lastName) {
+    java.util.Map<String, String> params = new java.util.HashMap<>();
+    params.put("firstName", firstName);
+    params.put("lastName", lastName);
+    return sqlSession.selectOne(NAMESPACE + "existsByName", params);
+  }
+
+  @Override
+  public void delete(Long id) {
+    sqlSession.delete(NAMESPACE + "delete", id);
+  }
 }

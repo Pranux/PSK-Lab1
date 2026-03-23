@@ -1,6 +1,7 @@
 package org.project.lab.service;
 
-import org.project.lab.dao.UniversityDAOJPA;
+//import org.project.lab.dao.UniversityDAOJPA;
+import org.project.lab.dao.UniversityDAO;
 import org.project.lab.entity.University;
 import org.project.lab.interceptor.Logged;
 
@@ -14,7 +15,8 @@ import java.util.List;
 public class UniversityService implements UniversityServiceLocal {
 
   @Inject
-  private UniversityDAOJPA universityDAO;
+//  private UniversityDAOJPA universityDAO;
+  private UniversityDAO universityDAO;
 
   public List<University> getAllUniversities() {
     return universityDAO.findAll();

@@ -17,4 +17,9 @@
     VALUES (#{title}, #{credits}, #{university.id})
   </insert>
 
+  <select id="findByUniversity" parameterType="long" resultType="Course">
+    SELECT id, title, credits, opt_lock_version as optLockVersion
+    FROM course WHERE university_id = #{universityId}
+  </select>
+
 </mapper>

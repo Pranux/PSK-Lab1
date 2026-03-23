@@ -22,6 +22,7 @@ public class UniversityDAOMyBatis implements UniversityDAO {
 
   @Override
   public List<University> findAll() {
+    System.out.println("testas");
     return sqlSession.selectList(NAMESPACE + "findAll");
   }
 

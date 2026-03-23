@@ -25,6 +25,9 @@ public class University {
   @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Course> courses = new ArrayList<>();
   
+  @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  private List<Student> students = new ArrayList<>();
+  
   public University() {}
   
   public Long getId() { return id; }
@@ -41,4 +44,7 @@ public class University {
 
   public List<Course> getCourses() { return courses; }
   public void setCourses(List<Course> courses) { this.courses = courses; }
+
+  public List<Student> getStudents() { return students; }
+  public void setStudents(List<Student> students) { this.students = students; }
 }
